@@ -18,7 +18,7 @@ export const usePokedexStore = create((set) => ({
 const getAllPokemon = async (set) => {
 	set({ loadingPokemon: true });
 	try {
-		const res = await axios.get('https://pokeapi.co/api/v2/pokemon');
+		const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=250');
 		console.log(res);
 		if (res.status === 200) {
 			const results = await res.data.results;
@@ -32,6 +32,7 @@ const getAllPokemon = async (set) => {
 			pokemons.sort(function (a, b) {
 				return a.id - b.id;
 			});
+			console.log(pokemons[1]);
 			set({ loadingPokemon: false, error: '', pokemonResults: pokemons });
 		}
 	} catch (Error) {
