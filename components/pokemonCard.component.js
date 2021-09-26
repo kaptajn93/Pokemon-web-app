@@ -14,7 +14,7 @@ const PokemonCard = ({ pokemon }) => {
 		<Card
 			hoverable
 			style={{ minWidth: '400px', minHeight: '550px', margin: '16px' }}
-			cover={<Image width={100} height={200} alt={pokemon.name} src={`https://img.pokemondb.net/artwork/large/${pokemon.name}.jpg`} />}
+			cover={<Image layout='responsive' width={400} height={300} alt={pokemon.name} src={`https://img.pokemondb.net/artwork/large/${pokemon.name}.jpg`} />}
 		>
 			<Meta title={pokemon.name} />
 			<p style={{ margin: 0 }}>

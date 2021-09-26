@@ -1,11 +1,16 @@
 import axios from 'axios';
 import create from 'zustand';
+import { isEmpty } from '../_helpers';
 
 export const usePokedexStore = create((set) => ({
 	loadingPokemon: false,
 	error: '',
 	pokemonResults: [],
+	filteredResults: [],
+	searchQuery: '',
+	showAll: true,
 	getAllPokemon: () => getAllPokemon(set),
+	searchPokemonByName: () => searchPokemonByName(set),
 }));
 
 /**
@@ -51,5 +56,17 @@ const getPokeData = async (pokemon) => {
 	} catch (Error) {
 		// Something went wrong. reset load and return
 		console.log('Something went wrong', Error.message);
+	}
+};
+
+const searchPokemonByName = (set) => {
+	const { pokemonResults, searchQuery } = usePokedexStore.getState();
+	if (!isEmpty(searchQuery)) {
+		const filteredResults = pokemonResults.filter((pokemon) => {
+			return pokemon.name.includes(searchQuery);
+		});
+		set({ filteredResults: filteredResults, showAll: false });
+	} else {
+		set({ filteredResults: [], showAll: true });
 	}
 };

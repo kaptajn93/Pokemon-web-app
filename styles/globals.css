@@ -17,4 +17,13 @@ a {
 .pokemon-list {
 	display: flex;
 	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+}
+
+.pokedex-title-search {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-size: xx-large;
 }

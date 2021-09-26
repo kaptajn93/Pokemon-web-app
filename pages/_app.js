@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import 'antd/dist/antd.css';
-import PageLayout from '../components/Layout';
+import PageLayout from '../components/pageLayout.component';
 
 function MyApp({ Component, pageProps }) {
 	return (
