@@ -2,6 +2,7 @@ import { Spin } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { useEffect } from 'react';
 import PokemonCard from '../components/pokemonCard.component';
+import PokemonList from '../components/pokemonList.component';
 import SearchBar from '../components/searchBar.component';
 import { usePokedexStore } from '../stores/pokedex.store';
 import { isEmpty } from '../_helpers/index';
@@ -14,39 +15,39 @@ import { isEmpty } from '../_helpers/index';
  * @returns jsx list of all pokemoncards
  */
 const Pokedex = () => {
-	const { getAllPokemon, pokemonResults, loadingPokemon, searchQuery, filteredResults, showAll } = usePokedexStore((state) => ({
+	const { getAllPokemon, allPokemon, loadingPokemon, searchQuery, filteredResults, showAll, searchPokemonByName } = usePokedexStore((state) => ({
 		getAllPokemon: state.getAllPokemon,
-		pokemonResults: state.pokemonResults,
+		allPokemon: state.allPokemon,
 		loadingPokemon: state.loadingPokemon,
 		searchQuery: state.searchQuery,
 		filteredResults: state.filteredResults,
 		showAll: state.showAll,
+		searchPokemonByName: state.searchPokemonByName,
 	}));
 
 	useEffect(() => {
-		if (isEmpty(pokemonResults)) {
+		if (isEmpty(allPokemon)) {
 			getAllPokemon();
 		}
 	}, []);
 
-	if (loadingPokemon) {
-		return <Spin size='large' />;
-	}
+	const onSearch = (searchQuery) => {
+		usePokedexStore.setState({ searchQuery });
+		searchPokemonByName();
+	};
+
+	const onSearchChange = (event) => {
+		usePokedexStore.setState({ searchQuery: event.target.value });
+	};
+
+	const pokemons = showAll ? allPokemon : filteredResults;
 	return (
 		<div>
 			<div className='pokedex-title-search'>
 				<Title level={1}>Pokedex</Title>
-				<SearchBar />
+				<SearchBar onSearch={onSearch} searchQuery={searchQuery} onChange={onSearchChange} />
 			</div>
-			<div className='pokemon-list'>
-				{showAll
-					? pokemonResults.map((pokemon, index) => {
-							return <PokemonCard key={'pokemon-' + index} pokemon={pokemon} />;
-					  })
-					: filteredResults.map((pokemon, index) => {
-							return <PokemonCard key={'pokemon-' + index} pokemon={pokemon} />;
-					  })}
-			</div>
+			<PokemonList pokemons={pokemons} />
 		</div>
 	);
 };

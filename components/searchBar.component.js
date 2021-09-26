@@ -1,15 +1,19 @@
-import { Input, Space } from 'antd';
-import { AudioOutlined } from '@ant-design/icons';
-import { usePokedexStore } from '../stores/pokedex.store';
+import { Input } from 'antd';
 
 const { Search } = Input;
 
-const SearchBar = () => {
-	const onSearch = (searchQuery) => {
-		usePokedexStore.setState({ searchQuery });
-		usePokedexStore.getState().searchPokemonByName();
-	};
-	return <Search style={{ width: '650px' }} placeholder='Search for a pokemon' enterButton='Search' size='large' onSearch={onSearch} />;
+const SearchBar = ({ onSearch, searchQuery, onChange }) => {
+	return (
+		<Search
+			style={{ width: '650px' }}
+			placeholder='Search for a pokemon'
+			enterButton='Search'
+			size='large'
+			onSearch={onSearch}
+			defaultValue={searchQuery}
+			onChange={onChange}
+		/>
+	);
 };
 
 export default SearchBar;

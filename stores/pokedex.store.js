@@ -1,16 +1,18 @@
 import axios from 'axios';
 import create from 'zustand';
-import { isEmpty } from '../_helpers';
+import { filterByName, isEmpty, sortById } from '../_helpers';
+import { usePokebeltStore } from './pokebelt.store';
 
 export const usePokedexStore = create((set) => ({
 	loadingPokemon: false,
 	error: '',
-	pokemonResults: [],
+	allPokemon: [],
 	filteredResults: [],
 	searchQuery: '',
 	showAll: true,
 	getAllPokemon: () => getAllPokemon(set),
 	searchPokemonByName: () => searchPokemonByName(set),
+	catchPokemon: (id) => catchPokemon(id),
 }));
 
 /**
@@ -18,13 +20,12 @@ export const usePokedexStore = create((set) => ({
  * @name getAllPokemon
  * @description a method for fetching pokemon and set them in the shared store.
  * @param {}
- * @returns void
+ * @returns {array} list of all pokemons
  */
 const getAllPokemon = async (set) => {
 	set({ loadingPokemon: true });
 	try {
 		const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=250');
-		console.log(res);
 		if (res.status === 200) {
 			const results = await res.data.results;
 			let pokemons = [];
@@ -34,11 +35,9 @@ const getAllPokemon = async (set) => {
 					pokemons.push(pokeData);
 				})
 			);
-			pokemons.sort(function (a, b) {
-				return a.id - b.id;
-			});
-			console.log(pokemons[1]);
-			set({ loadingPokemon: false, error: '', pokemonResults: pokemons });
+			pokemons = sortById(pokemons);
+			set({ loadingPokemon: false, error: '', allPokemon: pokemons });
+			return pokemons;
 		}
 	} catch (Error) {
 		// Something went wrong. reset load and return
@@ -47,6 +46,13 @@ const getAllPokemon = async (set) => {
 	}
 };
 
+/**
+ * @method
+ * @name getPokeData
+ * @description a function for collecting data from a specific pokemon
+ * @param {object} pokemon
+ * @returns {object} pokemon data
+ */
 const getPokeData = async (pokemon) => {
 	try {
 		const res = await axios.get(pokemon.url);
@@ -59,14 +65,31 @@ const getPokeData = async (pokemon) => {
 	}
 };
 
+/**
+ * @method
+ * @name searchPokemonByName
+ * @description a function for searching in the pokedex for a specific pokemon
+ * @param {}
+ * @returns void
+ */
 const searchPokemonByName = (set) => {
-	const { pokemonResults, searchQuery } = usePokedexStore.getState();
+	const { allPokemon, searchQuery } = usePokedexStore.getState();
 	if (!isEmpty(searchQuery)) {
-		const filteredResults = pokemonResults.filter((pokemon) => {
-			return pokemon.name.includes(searchQuery);
-		});
+		const filteredResults = filterByName(allPokemon, searchQuery);
 		set({ filteredResults: filteredResults, showAll: false });
 	} else {
 		set({ filteredResults: [], showAll: true });
 	}
+};
+
+/**
+ * @method
+ * @name catchPokemon
+ * @description a method for adding a pokemon to your belt
+ * @param {String} id of the pokemon
+ * @returns void
+ */
+const catchPokemon = (id) => {
+	let ownedPokemonIds = usePokebeltStore.getState().ownedPokemonIds;
+	usePokebeltStore.setState({ ownedPokemonIds: [...ownedPokemonIds, id] });
 };

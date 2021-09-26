@@ -12,7 +12,7 @@ const PageLayout = ({ children }) => {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 			<Layout className='layout'>
-				{/* <Header>
+				<Header>
 					<Menu theme='dark' mode='horizontal' defaultSelectedKeys={['page-0']}>
 						{pages.map((pageName, index) => {
 							return (
@@ -22,7 +22,7 @@ const PageLayout = ({ children }) => {
 							);
 						})}
 					</Menu>
-				</Header> */}
+				</Header>
 				<Content style={{ padding: '0 50px' }}>
 					<div className='site-layout-content'>{children}</div>
 				</Content>
