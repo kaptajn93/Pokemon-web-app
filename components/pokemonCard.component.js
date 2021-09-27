@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { Card, List, Button } from 'antd';
 import { usePokebeltStore } from '../stores/pokebelt.store';
 import { usePokedexStore } from '../stores/pokedex.store';
-import { useEffect } from 'react';
 const { Meta } = Card;
 
 /**
@@ -18,9 +17,15 @@ const PokemonCard = ({ pokemon, isBeltPage }) => {
 		releasePokemon: state.releasePokemon,
 		ownedPokemonIds: state.ownedPokemonIds,
 	}));
-
 	const isOwned = ownedPokemonIds && ownedPokemonIds.find((id) => id === pokemon.id);
 
+	/**
+	 * @method
+	 * @name getActionButton
+	 * @description a method for rendering the "catch", "in belt" or "release" pokemon button.
+	 * @param {}
+	 * @returns jsx button with action
+	 */
 	const getActionButton = () => {
 		if (isOwned && isBeltPage) {
 			return <Button onClick={() => releasePokemon(pokemon.id)}>Release</Button>;
@@ -37,6 +42,7 @@ const PokemonCard = ({ pokemon, isBeltPage }) => {
 	return (
 		<Card
 			hoverable
+			// className='pokemon-card' // Card component do not take css className
 			style={{ minWidth: '400px', minHeight: '550px', margin: '16px' }}
 			cover={<Image layout='responsive' width={400} height={300} alt={pokemon.name} src={`https://img.pokemondb.net/artwork/large/${pokemon.name}.jpg`} />}
 		>
@@ -46,7 +52,7 @@ const PokemonCard = ({ pokemon, isBeltPage }) => {
 				header={<strong>Type</strong>}
 				dataSource={pokemon?.types}
 				renderItem={(type) => {
-					return <List.Item>{type.type.name}</List.Item>;
+					return <List.Item>{type?.type?.name}</List.Item>;
 				}}
 			/>
 
@@ -57,7 +63,7 @@ const PokemonCard = ({ pokemon, isBeltPage }) => {
 				renderItem={(stat) => {
 					return (
 						<List.Item>
-							{stat.stat.name}:<p style={{ float: 'right' }}>{stat.base_stat}</p>
+							{stat?.stat?.name}:<p style={{ float: 'right' }}>{stat?.base_stat}</p>
 						</List.Item>
 					);
 				}}

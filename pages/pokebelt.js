@@ -7,23 +7,20 @@ import { usePokebeltStore } from '../stores/pokebelt.store';
 /**
  * @page
  * @name Pokedex
- * @description a page displaying all pokemon and some information about them
+ * @description a page displaying all owned pokemon and some information about them
  * @param {}
- * @returns jsx list of all pokemoncards
+ * @returns jsx list of all pokemoncards owned
  */
 const Pokebelt = () => {
-	const { ownedPokemon, getOwnedPokemon, loadingPokemon, filteredResults, showAll, searchPokemonByName, searchQuery, ownedPokemonIds } = usePokebeltStore(
-		(state) => ({
-			ownedPokemon: state.ownedPokemon,
-			getOwnedPokemon: state.getOwnedPokemon,
-			loadingPokemon: state.loadingPokemon,
-			filteredResults: state.filteredResults,
-			showAll: state.showAll,
-			searchPokemonByName: state.searchPokemonByName,
-			searchQuery: state.searchQuery,
-			ownedPokemonIds: state.ownedPokemonIds,
-		})
-	);
+	const { ownedPokemon, getOwnedPokemon, filteredResults, showAll, searchPokemonByName, searchQuery, ownedPokemonIds } = usePokebeltStore((state) => ({
+		ownedPokemon: state.ownedPokemon,
+		getOwnedPokemon: state.getOwnedPokemon,
+		filteredResults: state.filteredResults,
+		showAll: state.showAll,
+		searchPokemonByName: state.searchPokemonByName,
+		searchQuery: state.searchQuery,
+		ownedPokemonIds: state.ownedPokemonIds,
+	}));
 
 	useEffect(() => {
 		getOwnedPokemon();

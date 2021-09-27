@@ -1,7 +1,5 @@
-import { Spin } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { useEffect } from 'react';
-import PokemonCard from '../components/pokemonCard.component';
 import PokemonList from '../components/pokemonList.component';
 import SearchBar from '../components/searchBar.component';
 import { usePokedexStore } from '../stores/pokedex.store';
@@ -10,15 +8,14 @@ import { isEmpty } from '../_helpers/index';
 /**
  * @page
  * @name Pokedex
- * @description a page displaying all pokemon and some information about them
+ * @description a page displaying all pokemon cards, info about them and the possibility to catch them (adding them to the belt)
  * @param {}
  * @returns jsx list of all pokemoncards
  */
 const Pokedex = () => {
-	const { getAllPokemon, allPokemon, loadingPokemon, searchQuery, filteredResults, showAll, searchPokemonByName } = usePokedexStore((state) => ({
+	const { getAllPokemon, allPokemon, searchQuery, filteredResults, showAll, searchPokemonByName } = usePokedexStore((state) => ({
 		getAllPokemon: state.getAllPokemon,
 		allPokemon: state.allPokemon,
-		loadingPokemon: state.loadingPokemon,
 		searchQuery: state.searchQuery,
 		filteredResults: state.filteredResults,
 		showAll: state.showAll,
