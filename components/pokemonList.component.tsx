@@ -1,9 +1,14 @@
 import { Spin } from 'antd';
+import { Pokemon } from '../stores/interfaces/pokemon';
 import { usePokebeltStore } from '../stores/pokebelt.store';
 import { usePokedexStore } from '../stores/pokedex.store';
 import { isEmpty } from '../_helpers';
 import PokemonCard from './pokemonCard.component';
 
+type PokemonListProps = {
+	pokemons: Pokemon[];
+	isBeltPage: boolean;
+};
 /**
  * @component
  * @name PokemonList
@@ -12,7 +17,7 @@ import PokemonCard from './pokemonCard.component';
  * @param {Boolean} isBeltPage
  * @returns jsx list of pokemon cards
  */
-const PokemonList = ({ pokemons, isBeltPage }) => {
+const PokemonList = ({ pokemons, isBeltPage }: PokemonListProps) => {
 	let loadingPokedex = usePokedexStore.getState().loadingPokemon;
 	let loadingPokebelt = usePokebeltStore.getState().loadingPokemon;
 	const isLoading = loadingPokedex || loadingPokebelt;

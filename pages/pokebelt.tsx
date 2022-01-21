@@ -11,7 +11,7 @@ import { usePokebeltStore } from '../stores/pokebelt.store';
  * @param {}
  * @returns jsx list of all pokemoncards owned
  */
-const Pokebelt = () => {
+const Pokebelt = (): JSX.Element => {
 	const { ownedPokemon, getOwnedPokemon, filteredResults, showAll, searchPokemonByName, searchQuery, ownedPokemonIds } = usePokebeltStore((state) => ({
 		ownedPokemon: state.ownedPokemon,
 		getOwnedPokemon: state.getOwnedPokemon,
@@ -29,7 +29,7 @@ const Pokebelt = () => {
 	const onSearch = () => {
 		searchPokemonByName();
 	};
-	const onSearchChange = (event) => {
+	const onSearchChange = (event: any) => {
 		usePokebeltStore.setState({ searchQuery: event.target.value });
 	};
 
@@ -37,7 +37,7 @@ const Pokebelt = () => {
 	return (
 		<div>
 			<div className='pokedex-title-search'>
-				<Title level={1}>Pokedex</Title>
+				<Title level={1}>Pokebelt</Title>
 				<SearchBar onSearch={onSearch} searchQuery={searchQuery} onChange={onSearchChange} />
 			</div>
 			<PokemonList pokemons={pokemons} isBeltPage={true} />

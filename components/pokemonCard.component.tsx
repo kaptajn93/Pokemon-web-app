@@ -2,8 +2,13 @@ import Image from 'next/image';
 import { Card, List, Button } from 'antd';
 import { usePokebeltStore } from '../stores/pokebelt.store';
 import { usePokedexStore } from '../stores/pokedex.store';
+import { Pokemon } from '../stores/interfaces/pokemon';
 const { Meta } = Card;
 
+type PokeCardProps = {
+	pokemon: Pokemon;
+	isBeltPage: boolean;
+};
 /**
  * @component
  * @name PokemonCard
@@ -11,13 +16,13 @@ const { Meta } = Card;
  * @param {pokemon}, object
  * @returns jsx antd card component with image and stats about the pokemon
  */
-const PokemonCard = ({ pokemon, isBeltPage }) => {
+const PokemonCard = ({ pokemon, isBeltPage }: PokeCardProps): JSX.Element => {
 	const { catchPokemon } = usePokedexStore.getState();
-	const { releasePokemon, ownedPokemonIds } = usePokebeltStore((state) => ({
+	const { releasePokemon, ownedPokemonIds } = usePokebeltStore((state: any) => ({
 		releasePokemon: state.releasePokemon,
 		ownedPokemonIds: state.ownedPokemonIds,
 	}));
-	const isOwned = ownedPokemonIds && ownedPokemonIds.find((id) => id === pokemon.id);
+	const isOwned = ownedPokemonIds && ownedPokemonIds.find((id: number) => id === pokemon.id);
 
 	/**
 	 * @method
@@ -26,7 +31,7 @@ const PokemonCard = ({ pokemon, isBeltPage }) => {
 	 * @param {}
 	 * @returns jsx button with action
 	 */
-	const getActionButton = () => {
+	const getActionButton = (): JSX.Element => {
 		if (isOwned && isBeltPage) {
 			return <Button onClick={() => releasePokemon(pokemon.id)}>Release</Button>;
 		} else if (isOwned && !isBeltPage) {
@@ -44,7 +49,7 @@ const PokemonCard = ({ pokemon, isBeltPage }) => {
 			hoverable
 			// className='pokemon-card' // Card component do not take css className
 			style={{ minWidth: '400px', minHeight: '550px', margin: '16px' }}
-			cover={<Image layout='responsive' width={400} height={300} alt={pokemon.name} src={`https://img.pokemondb.net/artwork/large/${pokemon.name}.jpg`} />}
+			cover={<img /*layout='responsive'*/ width={400} height={300} alt={pokemon.name} src={`https://img.pokemondb.net/artwork/large/${pokemon.name}.jpg`} />}
 		>
 			<Meta title={pokemon.name} description={`Number: ${pokemon.id}`} />
 			<List

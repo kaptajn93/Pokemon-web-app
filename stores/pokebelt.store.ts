@@ -1,8 +1,22 @@
 import create from 'zustand';
 import { filterByName, isEmpty, sortById } from '../_helpers';
+import { Pokemon } from './interfaces/pokemon';
 import { usePokedexStore } from './pokedex.store';
 
-export const usePokebeltStore = create((set) => ({
+type PokeBelt = {
+	loadingPokemon: boolean;
+	error: string;
+	ownedPokemonIds: number[]; // always starting with pikachu
+	ownedPokemon: Pokemon[];
+	filteredResults: Pokemon[];
+	searchQuery: string;
+	showAll: boolean;
+	getOwnedPokemon: () => void;
+	searchPokemonByName: () => void;
+	releasePokemon: (id: number) => void;
+};
+
+export const usePokebeltStore = create<PokeBelt>((set) => ({
 	loadingPokemon: false,
 	error: '',
 	ownedPokemonIds: [25], // always starting with pikachu
@@ -22,7 +36,7 @@ export const usePokebeltStore = create((set) => ({
  * @param {}
  * @returns void
  */
-const getOwnedPokemon = async (set) => {
+const getOwnedPokemon = async (set: any): Promise<void> => {
 	set({ loadingPokemon: true });
 	const { ownedPokemonIds } = usePokebeltStore.getState();
 	let { allPokemon, getAllPokemon } = usePokedexStore.getState();
@@ -43,7 +57,7 @@ const getOwnedPokemon = async (set) => {
  * @param {}
  * @returns void
  */
-const searchPokemonByName = (set) => {
+const searchPokemonByName = (set: any): void => {
 	const { ownedPokemon, searchQuery } = usePokebeltStore.getState();
 	if (!isEmpty(searchQuery)) {
 		const filteredResults = filterByName(ownedPokemon, searchQuery);
@@ -60,7 +74,7 @@ const searchPokemonByName = (set) => {
  * @param {String} id of the pokemon
  * @returns void
  */
-const releasePokemon = (id, set) => {
+const releasePokemon = (id: number, set: any): void => {
 	let { ownedPokemon, ownedPokemonIds } = usePokebeltStore.getState();
 	//removing from pokemon array
 	const ownedPokemonIndex = ownedPokemon.findIndex((pokemon) => pokemon.id === id);

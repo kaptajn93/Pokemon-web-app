@@ -3,6 +3,9 @@ import Link from 'next/link';
 import Layout, { Content, Footer, Header } from 'antd/lib/layout/layout';
 import Head from 'next/head';
 
+type PageLayoutProps = {
+	children: JSX.Element;
+};
 /**
  * @component
  * @name PageLayout
@@ -10,7 +13,7 @@ import Head from 'next/head';
  * @param {Array} list of children components
  * @returns jsx layout wrapper
  */
-const PageLayout = ({ children }) => {
+const PageLayout = ({ children }: PageLayoutProps) => {
 	const pages = ['pokedex', 'pokebelt'];
 	return (
 		<>

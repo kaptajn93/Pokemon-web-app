@@ -12,7 +12,7 @@ import { isEmpty } from '../_helpers/index';
  * @param {}
  * @returns jsx list of all pokemoncards
  */
-const Pokedex = () => {
+const Pokedex = (): JSX.Element => {
 	const { getAllPokemon, allPokemon, searchQuery, filteredResults, showAll, searchPokemonByName } = usePokedexStore((state) => ({
 		getAllPokemon: state.getAllPokemon,
 		allPokemon: state.allPokemon,
@@ -28,12 +28,12 @@ const Pokedex = () => {
 		}
 	}, []);
 
-	const onSearch = (searchQuery) => {
+	const onSearch = (searchQuery: string) => {
 		usePokedexStore.setState({ searchQuery });
 		searchPokemonByName();
 	};
 
-	const onSearchChange = (event) => {
+	const onSearchChange = (event: any) => {
 		usePokedexStore.setState({ searchQuery: event.target.value });
 	};
 
@@ -44,7 +44,7 @@ const Pokedex = () => {
 				<Title level={1}>Pokedex</Title>
 				<SearchBar onSearch={onSearch} searchQuery={searchQuery} onChange={onSearchChange} />
 			</div>
-			<PokemonList pokemons={pokemons} />
+			<PokemonList pokemons={pokemons} isBeltPage={false} />
 		</div>
 	);
 };

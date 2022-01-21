@@ -1,9 +1,22 @@
 import axios from 'axios';
 import create from 'zustand';
 import { filterByName, isEmpty, sortById } from '../_helpers';
+import { Pokemon } from './interfaces/pokemon';
 import { usePokebeltStore } from './pokebelt.store';
 
-export const usePokedexStore = create((set) => ({
+type PokeDex = {
+	loadingPokemon: boolean;
+	error: string;
+	allPokemon: Pokemon[];
+	filteredResults: Pokemon[];
+	searchQuery: string;
+	showAll: boolean;
+	getAllPokemon: () => Promise<Pokemon[]>;
+	searchPokemonByName: () => void;
+	catchPokemon: (id: number) => void;
+};
+
+export const usePokedexStore = create<PokeDex>((set) => ({
 	loadingPokemon: false,
 	error: '',
 	allPokemon: [],
@@ -22,27 +35,28 @@ export const usePokedexStore = create((set) => ({
  * @param {}
  * @returns {array} list of all pokemons
  */
-const getAllPokemon = async (set) => {
+const getAllPokemon = async (set: any): Promise<Pokemon[]> => {
 	set({ loadingPokemon: true });
+	let pokemons: Pokemon[] = [];
 	try {
 		const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=250');
 		if (res.status === 200) {
 			const results = await res.data.results;
-			let pokemons = [];
 			await Promise.all(
-				results.map(async (pokemon) => {
-					const pokeData = await getPokeData(pokemon, set);
+				results.map(async (pokemon: Pokemon) => {
+					const pokeData = await getPokeData(pokemon);
 					pokemons.push(pokeData);
 				})
 			);
 			pokemons = sortById(pokemons);
 			set({ loadingPokemon: false, error: '', allPokemon: pokemons });
-			return pokemons;
 		}
-	} catch (Error) {
+		return pokemons;
+	} catch (Error: any) {
 		// Something went wrong. reset load and return
 		console.log('Something went wrong', Error.message);
 		set({ loadingPokemon: false, error: Error?.response ? Error?.response?.data : Error?.message });
+		return pokemons;
 	}
 };
 
@@ -53,16 +67,18 @@ const getAllPokemon = async (set) => {
  * @param {object} pokemon
  * @returns {object} pokemon data
  */
-const getPokeData = async (pokemon) => {
+const getPokeData = async (pokemon: Pokemon): Promise<Pokemon> => {
+	let pokeData: any = {};
 	try {
 		const res = await axios.get(pokemon.url);
 		if (res.status === 200) {
-			return res.data;
+			pokeData = res.data;
 		}
-	} catch (Error) {
+	} catch (Error: any) {
 		// Something went wrong. reset load and return
 		console.log('Something went wrong', Error.message);
 	}
+	return pokeData;
 };
 
 /**
@@ -72,7 +88,7 @@ const getPokeData = async (pokemon) => {
  * @param {}
  * @returns void
  */
-const searchPokemonByName = (set) => {
+const searchPokemonByName = (set: any) => {
 	const { allPokemon, searchQuery } = usePokedexStore.getState();
 	if (!isEmpty(searchQuery)) {
 		const filteredResults = filterByName(allPokemon, searchQuery);
@@ -89,7 +105,7 @@ const searchPokemonByName = (set) => {
  * @param {String} id of the pokemon
  * @returns void
  */
-const catchPokemon = (id) => {
+const catchPokemon = (id: number) => {
 	let ownedPokemonIds = usePokebeltStore.getState().ownedPokemonIds;
 	usePokebeltStore.setState({ ownedPokemonIds: [...ownedPokemonIds, id] });
 };
