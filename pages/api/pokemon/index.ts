@@ -8,6 +8,7 @@ import { Pokemon } from '../../../stores/interfaces/pokemon';
  * @description a method for fetching pokemon and set them in the shared store.
  * @param {}
  * @returns {array} list of all pokemons
+ * .
  */
 export const getAllPokemon = async (limit: number = 250): Promise<Pokemon[]> => {
 	let pokemons: Pokemon[] = [];
